@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,9 @@ public class UserService {
 
     @Autowired
     private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User createUser(String email, String name) {
 
@@ -66,12 +70,34 @@ public class UserService {
         return newUser;
     }
 
+    public User createUser(String login, String password, String name, String email) {
+
+        User newUser = new User();
+        Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
+        Set<Authority> authorities = new HashSet<>();
+        String encryptedPassword = passwordEncoder.encode(password);
+        newUser.setLogin(login);
+        newUser.setPassword(encryptedPassword);
+        newUser.setName(name);
+        newUser.setEmail(email);
+        newUser.setActivated(false);
+        authorities.add(authority);
+        newUser.setAuthorities(authorities);
+        userRepository.save(newUser);
+        log.debug("Created Information for User: {}", newUser);
+        return newUser;
+    }
+
     public UserDTO findOneById(Long id) {
         return new UserDTO(userRepository.findOneById(id).get());
     }
 
     public Optional<User> findOneByLogin(String login) {
         return userRepository.findOneByLogin(login);
+    }
+
+    public Optional<User> findOneByEmail(String email)  {
+        return userRepository.findOneByEmail(email);
     }
 
     public void updateUser(Long id, String email, String name, boolean activated) {

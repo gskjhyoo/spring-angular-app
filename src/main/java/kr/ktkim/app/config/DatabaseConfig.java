@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * @author Keumtae Kim
  */
-public class DatabaseConfiguration {
+public class DatabaseConfig {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 

@@ -33,6 +33,13 @@ public class User extends BaseModel {
     @Column(name = "login", length = 50,  unique = true, nullable = false)
     private String login;
 
+    @JsonIgnore
+    @NotNull
+    @Size(min = 60, max = 60)
+    @Column(name = "password_hash",length = 60)
+    private String password;
+
+
     @Email
     @Size(min = 5, max = 100)
     @Column(length = 100, unique = true)
@@ -103,6 +110,14 @@ public class User extends BaseModel {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {

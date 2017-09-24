@@ -26,6 +26,7 @@
         <node.version>v6.11.0</node.version>
         <npm.version>5.4.2</npm.version>
         <commons-lang.version>3.6</commons-lang.version>
+        <jjwt.version>0.7.0</jjwt.version>
     </properties>
 
     <dependencies>
@@ -138,6 +139,29 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-actuator</artifactId>
         </dependency>
+
+        <!-- security -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-data</artifactId>
+        </dependency>
+        <!-- jwt -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <!-- security end -->
     </dependencies>
 
     <build>
