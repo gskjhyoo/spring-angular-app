@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Keumtae Kim
@@ -38,7 +39,6 @@ public class User extends BaseModel {
     @Size(min = 60, max = 60)
     @Column(name = "password_hash",length = 60)
     private String password;
-
 
     @Email
     @Size(min = 5, max = 100)

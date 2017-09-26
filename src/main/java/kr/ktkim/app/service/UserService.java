@@ -2,7 +2,7 @@ package kr.ktkim.app.service;
 
 import kr.ktkim.app.model.Authority;
 import kr.ktkim.app.model.User;
-import kr.ktkim.app.model.UserDTO;
+import kr.ktkim.app.model.UserDto;
 import kr.ktkim.app.repository.AuthorityRepository;
 import kr.ktkim.app.repository.UserRepository;
 import kr.ktkim.app.security.AuthoritiesConstants;
@@ -88,15 +88,19 @@ public class UserService {
         return newUser;
     }
 
-    public UserDTO findOneById(Long id) {
-        return new UserDTO(userRepository.findOneById(id).get());
+    public User findOneById(Long id) {
+        User user = userRepository.findOneById(id).get();
+        if (user == null) {
+            throw new RuntimeException("");
+        }
+        return user;
     }
 
     public Optional<User> findOneByLogin(String login) {
         return userRepository.findOneByLogin(login);
     }
 
-    public Optional<User> findOneByEmail(String email)  {
+    public Optional<User> findOneByEmail(String email) {
         return userRepository.findOneByEmail(email);
     }
 
@@ -109,7 +113,7 @@ public class UserService {
         });
     }
 
-    public Optional<UserDTO> updateUser(UserDTO userDTO) {
+    public Optional<UserDto.Response> updateUser(UserDto.Update userDTO) {
         return Optional.of(userRepository.findOne(userDTO.getId()))
                 .map(user -> {
                     Set<Authority> managedAuthorities = user.getAuthorities();
@@ -120,13 +124,20 @@ public class UserService {
                     user.setActivated(userDTO.isActivated());
                     log.debug("Changed Information for User: {}", user);
                     return user;
-                }).map(UserDTO::new);
+                }).map(user -> {
+            UserDto.Response response = new UserDto.Response();
+            response.setLogin(user.getLogin());
+            response.setName(user.getName());
+            response.setEmail(user.getEmail());
+            response.setActivated(user.getActivated());
+            response.setAuthorities(user.getAuthorities());
+            return response;
+        });
     }
 
-    public Page<UserDTO> findAllUser(Pageable pageable) {
-        Page<User> page = userRepository.findAll(pageable);
-        Page<UserDTO> userDTOs = page.map(user -> new UserDTO(user));
-        return userDTOs;
+    public Page<User> findAllUser(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users;
     }
 
     public List<String> getAuthorities() {

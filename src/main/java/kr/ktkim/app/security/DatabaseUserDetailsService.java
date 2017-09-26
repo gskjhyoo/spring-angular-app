@@ -1,5 +1,6 @@
 package kr.ktkim.app.security;
 
+import kr.ktkim.app.model.Authority;
 import kr.ktkim.app.model.User;
 import kr.ktkim.app.repository.UserRepository;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * @author Keumtae Kim
  */
-@Component("userDetailsService")
+@Component
 public class DatabaseUserDetailsService implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

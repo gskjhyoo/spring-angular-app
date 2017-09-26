@@ -10,7 +10,6 @@ import java.io.IOException;
 /**
  * @author Keumtae Kim
  */
-@Component
 public class CorsFilter implements javax.servlet.Filter {
     // When @EnableWebSecurity is on then @Component shouldnt be used else the filter will be registered twice
     @Override
