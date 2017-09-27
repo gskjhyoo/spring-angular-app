@@ -9,7 +9,8 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from "./app-routing.module";
-
+import { SharedModule } from "./shared/shared.module";
+import { HttpModule }       from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -22,9 +23,11 @@ import { AppRoutingModule } from "./app-routing.module";
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     NgbModule.forRoot(),
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

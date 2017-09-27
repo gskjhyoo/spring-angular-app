@@ -1,3 +1,14 @@
-<p>
-  login works!
-</p>
+<div class="login-pg">
+  <div class="login-pg-head">
+    <div style="width:100px;"></div>
+    <p style="text-align: center"> App </p>
+  </div>
+  <form class="login-pg-form" name="form" (ngSubmit)="login()" novalidate>
+    <input type="text"     placeholder="AD계정" name="username" [(ngModel)]="model.username" #username="ngModel" required/>
+    <input type="password" placeholder="Password" name="password" [(ngModel)]="model.password" #password="ngModel" required/>
+    <button type="submit" class="btn btn-primary">LOG IN</button>
+  </form>
+  <div class="login-pg-foot">
+    <div *ngIf="errMsg" style="color:indianred; font-weight: bold">{{errMsg}}</div>
+  </div>
+</div>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {UserInfoService} from "../../shared/service/user-info.service";
 
 @Component({
   selector: 'navbar',
@@ -9,7 +10,9 @@ export class NavbarComponent implements OnInit {
 
   isNavbarCollapsed:boolean;
 
-  constructor() { }
+  constructor(private userInfoService: UserInfoService) {
+    this.isNavbarCollapsed = true;
+  }
 
   ngOnInit() {
   }
@@ -23,10 +26,17 @@ export class NavbarComponent implements OnInit {
   }
 
   isAuthenticated(): boolean {
-    return true;//개발편의를 위해 일단 true
+    return this.userInfoService.isLoggedIn();
+    //return true;//개발편의를 위해 일단 true
   }
 
   logout() {
+    this.userInfoService.removeUserInfo();
+  }
+
+  hasAuthority(role: string): boolean {
+    console.log('role : ' + role);
+    return this.userInfoService.hasAnyAuthority([<string>role]);
   }
 
 }
