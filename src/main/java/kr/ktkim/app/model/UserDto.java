@@ -1,7 +1,6 @@
 package kr.ktkim.app.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -50,5 +49,12 @@ public class UserDto {
         public void setAuthorities(Set<Authority> authorities) {
             this.authorities = authorities.stream().map(Authority::getName).collect(Collectors.toSet());
         }
+    }
+
+    @Data
+    public static class Login {
+        private String login;
+        @Size(min = 4, max = 12)
+        private String password;
     }
 }

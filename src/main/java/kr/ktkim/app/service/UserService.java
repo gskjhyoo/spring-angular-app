@@ -6,6 +6,7 @@ import kr.ktkim.app.model.UserDto;
 import kr.ktkim.app.repository.AuthorityRepository;
 import kr.ktkim.app.repository.UserRepository;
 import kr.ktkim.app.security.AuthoritiesConstants;
+import kr.ktkim.app.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,37 +40,6 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User createUser(String email, String name) {
-
-        User newUser = new User();
-        Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
-        Set<Authority> authorities = new HashSet<>();
-        newUser.setEmail(email);
-        newUser.setName(name);
-        newUser.setActivated(true);
-        authorities.add(authority);
-        newUser.setAuthorities(authorities);
-        userRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
-    }
-
-    public User createUser(String email, String name, Set<String> authorities) {
-        User newUser = new User();
-        Set<Authority> managedAuthorities = new HashSet<>();
-        authorities.stream()
-                .map(authorityRepository::findOne)
-                .forEach(managedAuthorities::add);
-
-        newUser.setEmail(email);
-        newUser.setName(name);
-        newUser.setActivated(false);
-        newUser.setAuthorities(managedAuthorities);
-        userRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
-    }
-
     public User createUser(String login, String password, String name, String email) {
 
         User newUser = new User();
@@ -86,14 +56,6 @@ public class UserService {
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
-    }
-
-    public User findOneById(Long id) {
-        User user = userRepository.findOneById(id).get();
-        if (user == null) {
-            throw new RuntimeException("");
-        }
-        return user;
     }
 
     public Optional<User> findOneByLogin(String login) {
@@ -125,14 +87,14 @@ public class UserService {
                     log.debug("Changed Information for User: {}", user);
                     return user;
                 }).map(user -> {
-            UserDto.Response response = new UserDto.Response();
-            response.setLogin(user.getLogin());
-            response.setName(user.getName());
-            response.setEmail(user.getEmail());
-            response.setActivated(user.getActivated());
-            response.setAuthorities(user.getAuthorities());
-            return response;
-        });
+                    UserDto.Response response = new UserDto.Response();
+                    response.setLogin(user.getLogin());
+                    response.setName(user.getName());
+                    response.setEmail(user.getEmail());
+                    response.setActivated(user.getActivated());
+                    response.setAuthorities(user.getAuthorities());
+                    return response;
+                });
     }
 
     public Page<User> findAllUser(Pageable pageable) {
@@ -147,6 +109,17 @@ public class UserService {
     public void deleteUser(Long userId) {
         userRepository.findOneById(userId).ifPresent(user -> {
             userRepository.delete(userId);
+        });
+    }
+
+    public void updatePassword(String login, String password) {
+        String currentLogin = SecurityUtil.getCurrentUser();
+        if (!login.equals(currentLogin)) {
+            throw new RuntimeException("incorrect login");
+        }
+        userRepository.findOneByLogin(SecurityUtil.getCurrentUser()).ifPresent(user -> {
+            String encryptedPassword = passwordEncoder.encode(password);
+            user.setPassword(encryptedPassword);
         });
     }
 }

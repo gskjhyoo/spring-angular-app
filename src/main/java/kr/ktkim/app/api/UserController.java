@@ -1,7 +1,6 @@
 package kr.ktkim.app.api;
 
 import kr.ktkim.app.common.PaginationUtil;
-import kr.ktkim.app.model.Authority;
 import kr.ktkim.app.model.User;
 import kr.ktkim.app.model.UserDto;
 import kr.ktkim.app.service.UserService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Keumtae Kim
@@ -41,22 +39,22 @@ public class UserController {
 
     @PostMapping(path = "/register",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
-    public ResponseEntity registerAccount(@Valid @RequestBody UserDto.Create userDTO) {
+    public ResponseEntity registerAccount(@Valid @RequestBody UserDto.Create userDto) {
 
         HttpHeaders textPlainHeaders = new HttpHeaders();
         textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
-        if (!!StringUtils.isEmpty(userDTO.getPassword()) &&
-                userDTO.getPassword().length() >= 4 && userDTO.getPassword().length() <= 100) {
+        if (!!StringUtils.isEmpty(userDto.getPassword()) &&
+                userDto.getPassword().length() >= 4 && userDto.getPassword().length() <= 100) {
             return new ResponseEntity<>(CHECK_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
-        return userService.findOneByLogin(userDTO.getLogin().toLowerCase())
+        return userService.findOneByLogin(userDto.getLogin().toLowerCase())
                 .map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-                .orElseGet(() -> userService.findOneByEmail(userDTO.getEmail())
+                .orElseGet(() -> userService.findOneByEmail(userDto.getEmail())
                         .map(user -> new ResponseEntity<>("email address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
                         .orElseGet(() -> {
                             User user = userService
-                                    .createUser(userDTO.getLogin(), userDTO.getPassword(),
-                                            userDTO.getName(), userDTO.getEmail().toLowerCase());
+                                    .createUser(userDto.getLogin(), userDto.getPassword(),
+                                            userDto.getName(), userDto.getEmail().toLowerCase());
                             return new ResponseEntity<>(HttpStatus.CREATED);
                         })
                 );
@@ -76,5 +74,12 @@ public class UserController {
         Page<UserDto.Response> pageResult = page.map(user -> modelMapper.map(user, UserDto.Response.class));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
         return new ResponseEntity<>(pageResult.getContent(), headers, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/user/update-password",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    public ResponseEntity updatePassword(@Valid @RequestBody UserDto.Login userDto) {
+        userService.updatePassword(userDto.getLogin(), userDto.getPassword());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -4,12 +4,12 @@ import io.jsonwebtoken.*;
 import kr.ktkim.app.config.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -33,11 +33,8 @@ public class JwtUtil {
 
     private long tokenValidityInMillisecondsForRememberMe;
 
+    @Autowired
     private ApplicationProperties applicationProperties;
-
-    public JwtUtil(ApplicationProperties applicationProperties) {
-        this.applicationProperties = applicationProperties;
-    }
 
     @PostConstruct
     public void init() {
@@ -49,6 +46,7 @@ public class JwtUtil {
         this.tokenValidityInMillisecondsForRememberMe =
                 1000 * applicationProperties.getSecurity().getJwt().getTokenValidityInSecondsForRememberMe();
     }
+
     public String createToken(Authentication authentication, Boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -62,10 +60,10 @@ public class JwtUtil {
             validity = new Date(now + this.tokenValidityInMilliseconds);
         }
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .setExpiration(validity)

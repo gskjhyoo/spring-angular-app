@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Keumtae Kim
@@ -31,13 +30,13 @@ public class User extends BaseModel {
     private Long id;
 
     @Size(max = 50)
-    @Column(name = "login", length = 50,  unique = true, nullable = false)
+    @Column(name = "login", length = 50, unique = true, nullable = false)
     private String login;
 
     @JsonIgnore
     @NotNull
     @Size(min = 60, max = 60)
-    @Column(name = "password_hash",length = 60)
+    @Column(name = "password_hash", length = 60)
     private String password;
 
     @Email
@@ -77,12 +76,12 @@ public class User extends BaseModel {
     private Set<Authority> authorities = new HashSet<>();
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, length = 50, updatable = false)
+    @Column(name = "created_by", length = 50, updatable = false)
     @JsonIgnore
     private String createdBy;
 
     @CreatedDate
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_date")
     @JsonIgnore
     private Date createdDate = new Date();
 
