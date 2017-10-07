@@ -1,5 +1,6 @@
 package kr.ktkim.app.service;
 
+import kr.ktkim.app.common.Exception.ApiException;
 import kr.ktkim.app.model.Authority;
 import kr.ktkim.app.model.User;
 import kr.ktkim.app.model.UserDto;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,12 +60,15 @@ public class UserService {
         return newUser;
     }
 
-    public Optional<User> findOneByLogin(String login) {
-        return userRepository.findOneByLogin(login);
-    }
+    public User registerAccount(UserDto.Create userDto) {
+        userRepository.findOneByLoginOrEmail(userDto.getLogin(), userDto.getEmail())
+                .ifPresent(user -> {
+                    throw new ApiException("이미 등록된 아이디나 이메일입니다.", HttpStatus.BAD_REQUEST);
+                });
 
-    public Optional<User> findOneByEmail(String email) {
-        return userRepository.findOneByEmail(email);
+        User user = this.createUser(userDto.getLogin(), userDto.getPassword(),
+                userDto.getName(), userDto.getEmail().toLowerCase());
+        return user;
     }
 
     public void updateUser(Long id, String email, String name, boolean activated) {

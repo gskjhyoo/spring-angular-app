@@ -33,10 +33,7 @@ public class SwaggerConfig {
 
     @Bean
     public SecurityConfiguration security() {
-        return new SecurityConfiguration(null, // "client id",
-                null, // "client secret",
-                null, // "realm",
-                null, // "app",
+        return new SecurityConfiguration(null, null, null, null,
                 "Bearer " + jwtUtil.createAdminToken(), ApiKeyVehicle.HEADER, "Authorization", "," /* scope separator */);
     }
 }

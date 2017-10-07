@@ -3,6 +3,7 @@ package kr.ktkim.app.api;
 import kr.ktkim.app.common.PaginationUtil;
 import kr.ktkim.app.model.User;
 import kr.ktkim.app.model.UserDto;
+import kr.ktkim.app.repository.UserRepository;
 import kr.ktkim.app.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,9 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     private static final String CHECK_ERROR_MESSAGE = "Incorrect password";
@@ -47,22 +51,13 @@ public class UserController {
                 userDto.getPassword().length() >= 4 && userDto.getPassword().length() <= 100) {
             return new ResponseEntity<>(CHECK_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
-        return userService.findOneByLogin(userDto.getLogin().toLowerCase())
-                .map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-                .orElseGet(() -> userService.findOneByEmail(userDto.getEmail())
-                        .map(user -> new ResponseEntity<>("email address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
-                        .orElseGet(() -> {
-                            User user = userService
-                                    .createUser(userDto.getLogin(), userDto.getPassword(),
-                                            userDto.getName(), userDto.getEmail().toLowerCase());
-                            return new ResponseEntity<>(HttpStatus.CREATED);
-                        })
-                );
+        userService.registerAccount(userDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/users/{login}")
     public ResponseEntity<UserDto.Response> getUser(@PathVariable String login) {
-        return userService.findOneByLogin(login)
+        return userRepository.findOneByLogin(login)
                 .map(user -> modelMapper.map(user, UserDto.Response.class))
                 .map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

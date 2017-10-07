@@ -2,6 +2,7 @@ package kr.ktkim.app.service;
 
 import kr.ktkim.app.SpringAngularAppApplication;
 import kr.ktkim.app.model.User;
+import kr.ktkim.app.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
     public void testCreateUser() {
 
@@ -34,7 +38,7 @@ public class UserServiceTest {
         String email = "user000@test.com";
 
         User user = userService.createUser(login, password, name, email);
-        Optional<User> maybeUser = userService.findOneByLogin(login);
+        Optional<User> maybeUser = userRepository.findOneByLogin(login);
         assertThat(maybeUser.isPresent()).isTrue();
         assertThat(user).isEqualTo(maybeUser.get());
     }
