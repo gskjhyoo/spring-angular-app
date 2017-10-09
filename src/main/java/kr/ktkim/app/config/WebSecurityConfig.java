@@ -46,6 +46,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+
+    @Bean
+    public Http401ErrorEntryPoint http401ErrorEntryPoint() {
+        return new Http401ErrorEntryPoint();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -54,18 +60,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(http401ErrorEntryPoint())
                 .and()
-                .csrf()
-                .disable()
-                .headers()
-                .frameOptions()
-                .disable()
+                    .csrf()
+                    .disable()
+                    .headers()
+                    .frameOptions()
+                    .disable()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/api/authenticate").permitAll();
+                .antMatchers("/api/authenticate").permitAll()
+                .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/**").authenticated();
     }
 
     @Override
@@ -78,8 +85,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**");
     }
 
-    @Bean
-    public Http401ErrorEntryPoint http401ErrorEntryPoint() {
-        return new Http401ErrorEntryPoint();
-    }
+
 }

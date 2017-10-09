@@ -1,13 +1,13 @@
-import { Injectable, Inject } from '@angular/core';
-import { Headers, Response, RequestOptions } from '@angular/http';
-import { Router } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {Response} from '@angular/http';
+import {Router} from '@angular/router';
 
-import { Observable,Subject } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { UserInfoService, LoginInfoInStorage} from './user-info.service';
-import { ApiRequestService } from './api-request.service';
-import {  JwtHelper } from 'angular2-jwt';
+import {LoginInfoInStorage, UserInfoService} from './user-info.service';
+import {ApiRequestService} from './api-request.service';
+import {JwtHelper} from 'angular2-jwt';
 
 export interface LoginRequestParam{
   username:string;
