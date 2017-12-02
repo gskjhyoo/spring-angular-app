@@ -42,8 +42,18 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User createUser(String login, String password, String name, String email) {
+    public User registerAccount(UserDto.Create userDto) {
+        userRepository.findOneByLoginOrEmail(userDto.getLogin(), userDto.getEmail())
+                .ifPresent(user -> {
+                    throw new ApiException("이미 등록된 아이디나 이메일입니다.", HttpStatus.BAD_REQUEST);
+                });
 
+        User user = this.createUser(userDto.getLogin(), userDto.getPassword(),
+                userDto.getName(), userDto.getEmail().toLowerCase());
+        return user;
+    }
+
+    public User createUser(String login, String password, String name, String email) {
         User newUser = new User();
         Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
         Set<Authority> authorities = new HashSet<>();
@@ -60,16 +70,7 @@ public class UserService {
         return newUser;
     }
 
-    public User registerAccount(UserDto.Create userDto) {
-        userRepository.findOneByLoginOrEmail(userDto.getLogin(), userDto.getEmail())
-                .ifPresent(user -> {
-                    throw new ApiException("이미 등록된 아이디나 이메일입니다.", HttpStatus.BAD_REQUEST);
-                });
 
-        User user = this.createUser(userDto.getLogin(), userDto.getPassword(),
-                userDto.getName(), userDto.getEmail().toLowerCase());
-        return user;
-    }
 
     public void updateUser(Long id, String email, String name, boolean activated) {
         userRepository.findOneById(id).ifPresent(user -> {

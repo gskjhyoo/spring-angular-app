@@ -29,8 +29,8 @@ public class User extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 50)
-    @Column(name = "login", length = 50, unique = true, nullable = false)
+    @Size(max = 10)
+    @Column(name = "login", length = 10, unique = true, nullable = false)
     private String login;
 
     @JsonIgnore
@@ -40,30 +40,17 @@ public class User extends BaseModel {
     private String password;
 
     @Email
-    @Size(min = 5, max = 100)
-    @Column(length = 100, unique = true)
+    @Size(min = 5, max = 20)
+    @Column(length = 20, unique = true)
     private String email;
 
-    @Size(max = 50)
-    @Column(name = "name", length = 50)
+    @Size(max = 20)
+    @Column(name = "name", length = 20)
     private String name;
 
     @NotNull
     @Column(nullable = false)
     private boolean activated = false;
-
-    @Size(max = 20)
-    @Column(name = "activation_key", length = 20)
-    @JsonIgnore
-    private String activationKey;
-
-    @Size(max = 20)
-    @Column(name = "reset_key", length = 20)
-    @JsonIgnore
-    private String resetKey;
-
-    @Column(name = "reset_date")
-    private Date resetDate = null;
 
     @JsonIgnore
     @ManyToMany
@@ -141,30 +128,6 @@ public class User extends BaseModel {
 
     public void setActivated(boolean activated) {
         this.activated = activated;
-    }
-
-    public String getActivationKey() {
-        return activationKey;
-    }
-
-    public void setActivationKey(String activationKey) {
-        this.activationKey = activationKey;
-    }
-
-    public String getResetKey() {
-        return resetKey;
-    }
-
-    public void setResetKey(String resetKey) {
-        this.resetKey = resetKey;
-    }
-
-    public Date getResetDate() {
-        return resetDate;
-    }
-
-    public void setResetDate(Date resetDate) {
-        this.resetDate = resetDate;
     }
 
     public Set<Authority> getAuthorities() {

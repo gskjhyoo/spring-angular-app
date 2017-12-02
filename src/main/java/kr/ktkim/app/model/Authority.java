@@ -17,9 +17,9 @@ public class Authority extends BaseModel {
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    @Size(min = 0, max = 50)
+    @Size(min = 0, max = 20)
     @Id
-    @Column(length = 50)
+    @Column(length = 20)
     private String name;
 
     public String getName() {

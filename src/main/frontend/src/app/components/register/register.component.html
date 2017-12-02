@@ -1,7 +1,7 @@
 <div>
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <h1>Registration</h1>
+      <h1>회원 가입</h1>
 
       <div class="alert alert-success" *ngIf="success">
         <strong>사용자 등록이 완료되었습니다.</strong>
@@ -33,7 +33,7 @@
       <form name="form" role="form" (ngSubmit)="register()" #registerForm="ngForm" *ngIf="!success">
         <div class="form-group">
           <label class="form-control-label" for="login">Username</label>
-          <input type="text" class="form-control" [(ngModel)]="registerAccount.login" id="login" name="login" #login="ngModel" placeholder="Your username"
+          <input type="text" class="form-control" [(ngModel)]="registerAccount.login" id="login" name="login" #login="ngModel" placeholder="이름"
                  required minlength="1" maxlength="50" pattern="^[_'.@A-Za-z0-9-]*$">
           <div *ngIf="login.dirty && login.invalid">
             <small class="form-text text-danger" *ngIf="login.errors.required">
@@ -52,7 +52,7 @@
         </div>
         <div class="form-group">
           <label class="form-control-label" for="email">Email</label>
-          <input type="email" class="form-control" id="email" name="email" #email="ngModel" placeholder="Your email"
+          <input type="email" class="form-control" id="email" name="email" #email="ngModel" placeholder="이메일"
                  [(ngModel)]="registerAccount.email" minlength=5 maxlength=100 email required>
           <div *ngIf="email.dirty && email.invalid">
             <small class="form-text text-danger" *ngIf="email.errors.required">
@@ -71,7 +71,7 @@
         </div>
         <div class="form-group">
           <label class="form-control-label" for="password">New password</label>
-          <input type="password" class="form-control" id="password" name="password" #password="ngModel" placeholder="New password"
+          <input type="password" class="form-control" id="password" name="password" #password="ngModel" placeholder="비밀번호"
                  [(ngModel)]="registerAccount.password" minlength=4 maxlength=50 required>
           <div *ngIf="password.dirty && password.invalid">
             <small class="form-text text-danger" *ngIf="password.errors.required">
@@ -88,8 +88,8 @@
         </div>
         <div class="form-group">
           <label class="form-control-label" for="confirmPassword">New password confirmation</label>
-          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" #confirmPasswordInput="ngModel" placeholder="Confirm the new password"
-                 [(ngModel)]="confirmPassword" minlength=4 maxlength=50 required>
+          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" #confirmPasswordInput="ngModel" placeholder="비밀번호 확인"
+                 [(ngModel)]="confirmPassword" minlength=4 maxlength=10 required>
           <div *ngIf="confirmPasswordInput.dirty && confirmPasswordInput.invalid">
             <small class="form-text text-danger" *ngIf="confirmPasswordInput.errors.required">
               비밀번호 확인이 필요합니다.
@@ -98,12 +98,12 @@
               비밀번호 확인은 최소 4자 이상이어야 합니다.
             </small>
             <small class="form-text text-danger" *ngIf="confirmPasswordInput.errors.maxlength">
-              비밀번호 확인은 50자 이하여야 합니다.
+              비밀번호 확인은 10자 이하여야 합니다.
             </small>
           </div>
         </div>
 
-        <button type="submit" [disabled]="registerForm.form.invalid" class="btn btn-primary">Register</button>
+        <button type="submit" [disabled]="registerForm.form.invalid" class="btn btn-primary">가입하기</button>
       </form>
     </div>
   </div>

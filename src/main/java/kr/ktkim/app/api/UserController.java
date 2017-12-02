@@ -48,7 +48,7 @@ public class UserController {
         HttpHeaders textPlainHeaders = new HttpHeaders();
         textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
         if (!!StringUtils.isEmpty(userDto.getPassword()) &&
-                userDto.getPassword().length() >= 4 && userDto.getPassword().length() <= 100) {
+                userDto.getPassword().length() >= 4 && userDto.getPassword().length() <= 10) {
             return new ResponseEntity<>(CHECK_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
         userService.registerAccount(userDto);
